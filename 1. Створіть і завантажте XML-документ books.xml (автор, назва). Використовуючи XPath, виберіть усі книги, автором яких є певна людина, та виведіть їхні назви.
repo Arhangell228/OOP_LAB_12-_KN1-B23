@@ -1,0 +1,96 @@
+using System;
+using System.Text;
+using System.Xml;
+using System.Xml.XPath;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        Console.OutputEncoding = Encoding.UTF8;
+        Console.InputEncoding = Encoding.UTF8;
+
+        XmlDocument doc = new XmlDocument();
+        doc.LoadXml(@"<books>
+            <book>
+                <author>Ivan Franko</author>
+                <title>Zahar Berkut</title>
+            </book>
+            <book>
+                <author>Ivan Franko</author>
+                <title>Boryslav smiyetsya</title>
+            </book>
+            <book>
+                <author>Ivan Franko</author>
+                <title>Kameniari</title>
+            </book>
+            <book>
+                <author>Lesya Ukrainka</author>
+                <title>Lisova pisnya</title>
+            </book>
+            <book>
+                <author>Lesya Ukrainka</author>
+                <title>Na krylah pisen</title>
+            </book>
+            <book>
+                <author>Lesya Ukrainka</author>
+                <title>Davnya kazka</title>
+            </book>
+            <book>
+                <author>Lina Kostenko</author>
+                <title>Marusya Churai</title>
+            </book>
+            <book>
+                <author>Lina Kostenko</author>
+                <title>Sad netanuchykh skulptur</title>
+            </book>
+            <book>
+                <author>Lina Kostenko</author>
+                <title>Richerche</title>
+            </book>
+            <book>
+                <author>Taras Shevchenko</author>
+                <title>Kobzar</title>
+            </book>
+            <book>
+                <author>Taras Shevchenko</author>
+                <title>Haidamaky</title>
+            </book>
+            <book>
+                <author>Taras Shevchenko</author>
+                <title>Kateryna</title>
+            </book>
+        </books>");
+        doc.Save("books.xml");
+
+        // Завантаження XML
+        XPathDocument xdoc = new XPathDocument("books.xml");
+        XPathNavigator nav = xdoc.CreateNavigator();
+        XPathNodeIterator authorNodes = nav.Select("/books/book/author");
+        HashSet<string> authors = new HashSet<string>();
+
+        while (authorNodes.MoveNext())
+        {
+            authors.Add(authorNodes.Current.Value);
+        }
+
+        Console.WriteLine("Список авторів:");
+        foreach (string a in authors)
+        {
+            Console.WriteLine(a);
+        }
+
+        Console.Write("Введіть автора з цього списку: ");
+        string selectedAuthor = Console.ReadLine();
+
+        string xpath = $"/books/book[author='{selectedAuthor}']/title";
+        XPathNodeIterator titleNodes = nav.Select(xpath);
+
+        Console.WriteLine("Назви книг автора:");
+        while (titleNodes.MoveNext())
+        {
+            Console.WriteLine(titleNodes.Current.Value);
+        }
+    }
+}
