@@ -1,0 +1,40 @@
+using System;
+using System.Text.Json;
+using System.Text;
+using System.Collections.Generic;
+
+class User
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+    public List<string> Hobbies { get; set; }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Console.OutputEncoding = Encoding.UTF8;
+        Console.InputEncoding = Encoding.UTF8;
+
+        // JSON-рядок
+        string json = @"{
+            ""Name"": ""Oksana"",
+            ""Age"": 25,
+            ""Hobbies"": [""Reading"", ""Drawing"", ""Traveling""]
+        }";
+
+        // Десеріалізація JSON у об'єкт
+        User user = JsonSerializer.Deserialize<User>(json);
+
+        // Розрахунок року народження
+        int currentYear = DateTime.Now.Year;
+        int birthYear = currentYear - user.Age;
+
+        // Вивід результату
+        Console.WriteLine("Ім'я користувача: " + user.Name);
+        Console.WriteLine("Вік: " + user.Age);
+        Console.WriteLine("Рік народження: " + birthYear);
+        Console.WriteLine("Перше хобі: " + user.Hobbies[0]);
+    }
+}
